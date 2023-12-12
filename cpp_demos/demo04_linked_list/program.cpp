@@ -5,15 +5,71 @@ using namespace std;
 #include "linkedlist.h"
 
 void tryInsert(LinkedList &list, int index, int value){
-    try{
-        list.Insert(index, value);
-    }
-    catch(IndexError e){
-        cout<<"Error Inserting "<<value<<" at Index "<<index<<":\t"<<e.what()<<endl;
-    }
+   try
+   {
+    list.Insert(index, value);
+    cout<<"successfully inserted "<<value<<" at index "<<index<<endl;
+   }
+   catch(...)
+   {
+        cout<<"Some Error occured."<<endl;
+   }
+  
+
+   cout<<"tryInsert ends successfully"<<endl;
 }
 
+
+void tryInsertUsingErrorCode(LinkedList &list, int index, int value){
+   try
+   {
+    list.Insert(index, value);
+    cout<<"successfully inserted"<<value<<"at index"<<index<<endl;
+   }
+   catch(int errorCode)
+   {
+        if(errorCode==-1)
+            cout<<"You can't insert to empty list: error code:"<<errorCode<<endl;
+        else if(errorCode==-2)
+            cout<<"invalid index "<<index<<endl;
+        else
+            cout<<"unknown error code: "<<errorCode<<endl;
+   }
+
+   cout<<"tryInsert ends successfully"<<endl;
+}
+
+
+
 int main()
+{
+    LinkedList list;
+    try
+    {
+        int values[]={2,3,4,8}; 
+
+        tryInsert(list,0,10); //insert will fail.
+
+        for(auto value :values) list.Append(value);
+
+        tryInsert(list,0,10); //insert will succeed
+
+        tryInsert(list,100,1) ; //insert will fail.
+
+        tryInsert(list,2,100); //insert will succeed
+        
+    }
+    catch(char const * ex)
+    {
+        cout<<"Main Block ERROR: "<<ex<<endl;
+    }    
+
+    list.Show();
+
+    return 0;
+}
+
+int main_0()
 {
    
 

@@ -66,7 +66,8 @@ public:
                 first=newNode;    
             }
             else
-                throw  IndexError("Can't Insert to Empty List. Use Append");
+                //throw  IndexError("Can't Insert to Empty List. Use Append");
+                throw -1;
         }
         else
         {
@@ -87,7 +88,7 @@ public:
             {
                 //cout<<"invalid index"<<index<<endl;
                 //throw  exception();
-                throw IndexError("Invalid Index.");
+                throw "Index out of range ";
             }
 
         }
