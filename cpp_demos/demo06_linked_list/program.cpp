@@ -18,6 +18,10 @@ void tryInsert(LinkedList list, int index, int value)
     {
         cout<< ex.what()<< " @ "<<ex.where()<<endl;
     }
+    catch(EmptyError ex)
+    {
+        cout<< ex.what() <<endl;
+    }
 }
 
 int main()
@@ -26,7 +30,7 @@ int main()
     int numbers[]={2,3,9,5,6};
 
 
-    tryInsert(list,0,1); //fails
+    tryInsert(list,0,1); //fails with runtime_error
 
     for(auto value:numbers)
         list.Append(value);
