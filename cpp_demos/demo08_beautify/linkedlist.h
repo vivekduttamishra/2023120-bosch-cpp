@@ -86,7 +86,7 @@ namespace conceptarchitect::collections
 
 
 
-        int size() const
+        int Size() const
         {
             int c=0;
             for(auto ptr=first; ptr!=nullptr; ptr=ptr->next)
@@ -97,10 +97,10 @@ namespace conceptarchitect::collections
 
         Node * Locate(int index) const
         {
-            if(size()==0)
+            if(Size()==0)
                 throw EmptyError("LinkedList is emtpy");
 
-            if(index<0 || index>=size())
+            if(index<0 || index>=Size())
                 throw IndexError("Index out of range",index);
 
             auto ptr=first;
@@ -165,18 +165,29 @@ namespace conceptarchitect::collections
             return *this;
         }
 
+        bool operator==(const LinkedList &rhs) const
+        {
+            if(Size()!=rhs.Size())
+                return false;
+            if(&rhs==this)
+                return true;
+
+            for(auto l1=first, l2=rhs.first; l1!=nullptr; l1=l1->next,l2=l2->next)
+                if(l1->data!=l2->data)
+                    return false;
+
+            return true;
+        }
 
     };
 
-
-
     inline ostream & operator<<(ostream &out, const LinkedList &list)
     {
-        if(list.size()==0)
+        if(list.Size()==0)
             return out<<"LinkedList(empty)";
 
         out<<"LinkedList( ";
-        for(auto i=0;i<list.size();i++)
+        for(auto i=0;i<list.Size();i++)
             out<<list[i]<<" ";
 
         return out<<")";

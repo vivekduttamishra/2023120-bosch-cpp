@@ -7,9 +7,27 @@ using namespace std;
 using namespace conceptarchitect::collections;
 
 
-
-
 int main()
+{
+    LinkedList l1;
+    l1<<1<<2<<3<<4;
+    
+    LinkedList l2;
+    l2<<1<<2<<4<<3;
+
+    LinkedList l3;
+    l3<<1<<2<<3;
+
+    LinkedList l4;
+    l4<<1<<2<<3<<4;
+
+    cout
+            <<"l1==l2 =>"<<(l1==l2)<<endl
+            <<"l1==l3 =>"<<(l1==l3)<<endl
+            <<"l1==l4 =>"<<(l1==l4)<<endl;
+}
+
+int main2()
 {
     LinkedList list1;
     //list1<<cout<<endl;
