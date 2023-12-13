@@ -2,6 +2,7 @@
 #include <string>
 #include "index_error.h"
 #include "empty_error.h"
+#include "null_pointer_exception.h"
 
 using namespace std;
 
@@ -22,31 +23,79 @@ namespace conceptarchitect::collections
         }
     };
 
+    class LinkedListNodePointer
+    {
+        Node *ptr;
+
+    public:
+        LinkedListNodePointer(Node *ptr) : ptr(ptr) {}
+
+        int operator*()
+        {
+            if (ptr)
+                return ptr->data;
+            else
+                throw NullPointerException("Invalid Location");
+        }
+
+        int operator->()
+        {
+            return ptr->data;
+        }
+
+        LinkedListNodePointer &operator++()
+        {
+            if (ptr)
+                ptr = ptr->next;
+
+            return *this;
+        }
+
+        LinkedListNodePointer &operator--()
+        {
+            if (ptr)
+                ptr = ptr->previous;
+
+            return *this;
+        }
+
+        bool operator==(const LinkedListNodePointer &rhs) const
+        {
+            return ptr == rhs.ptr;
+        }
+
+        operator bool()
+        {
+            return ptr != nullptr;
+        }
+    };
+
     class LinkedList
     {
-        Node *first = nullptr;
-        Node *last=nullptr;
-        int _size=0;
 
-        Node * Locate(int index) const
+        Node *first = nullptr;
+        Node *last = nullptr;
+        int _size = 0;
+
+        Node *Locate(int index) const
         {
-            if(Size()==0)
+            if (Size() == 0)
                 throw EmptyError("LinkedList is emtpy");
 
-            if(index<0 || index>=Size())
-                throw IndexError("Index out of range",index);
+            if (index < 0 || index >= Size())
+                throw IndexError("Index out of range", index);
 
-            auto ptr=first;
-            for(auto i=0;i<index;i++)
-                ptr=ptr->next;
+            auto ptr = first;
+            for (auto i = 0; i < index; i++)
+                ptr = ptr->next;
 
             return ptr;
         }
 
     public:
-        LinkedList& Append(int value)
+        LinkedList &Append(int value)
         {
-            Node *newNode = new Node(value,nullptr,last);
+            Node *newNode = new Node(value, nullptr, last);
 
             if (first == nullptr)
             {
@@ -55,41 +104,35 @@ namespace conceptarchitect::collections
             else
             {
                 last->next = newNode;
-                
             }
 
-            last=newNode;
+            last = newNode;
             _size++;
             return *this;
         }
 
-        
-     
-
-        LinkedList& Insert(int index, int value) 
+        LinkedList &Insert(int index, int value)
         {
-            auto ptr= Locate(index);
-            Node *y= ptr->next;
-            Node * x= ptr->previous;
+            auto ptr = Locate(index);
+            Node *y = ptr->next;
+            Node *x = ptr->previous;
 
-            auto newNode= new Node(value,y,x);
+            auto newNode = new Node(value, y, x);
 
-            if(x)
-                x->next=newNode;
+            if (x)
+                x->next = newNode;
             else
-                first=newNode;
+                first = newNode;
 
-            y->previous=newNode;
+            y->previous = newNode;
             _size++;
 
             return *this;
-
         }
 
-
-        int & operator[](int index)
+        int &operator[](int index)
         {
-            auto ptr=Locate(index);
+            auto ptr = Locate(index);
             return ptr->data;
         }
 
@@ -98,70 +141,64 @@ namespace conceptarchitect::collections
             return Locate(index)->data;
         }
 
-        void Set(int index,int value)
+        void Set(int index, int value)
         {
-           Locate(index)->data=value;
+            Locate(index)->data = value;
         }
-
-
 
         int Size() const
         {
             return _size;
         }
 
-        
-
-       
-
         int Remove(int index)
         {
-            auto ptr=Locate(index);
+            auto ptr = Locate(index);
 
-            auto x= ptr->previous;
-            auto y= ptr->next;
+            auto x = ptr->previous;
+            auto y = ptr->next;
 
-            if(x)
-                x->next=y;
+            if (x)
+                x->next = y;
             else
-                first=y;
+                first = y;
 
-            if(y)
-                y->previous=x;
+            if (y)
+                y->previous = x;
 
-            auto value=ptr->data;
-            
+            auto value = ptr->data;
+
             delete ptr;
             _size--;
             return value;
         }
 
-        LinkedList operator+(const LinkedList& rhs) const
+        LinkedList operator+(const LinkedList &rhs) const
         {
             LinkedList result;
-            for(auto ptr=first;ptr;ptr=ptr->next)
+            for (auto ptr = first; ptr; ptr = ptr->next)
                 result.Append(ptr->data);
 
-            for(auto ptr=rhs.first;ptr;ptr=ptr->next)
+            for (auto ptr = rhs.first; ptr; ptr = ptr->next)
                 result.Append(ptr->data);
 
             return result;
         }
 
-        ostream & operator<<(ostream &out)
+        ostream &operator<<(ostream &out)
         {
-            if(first==nullptr)
-                return out<<"LinkedList(empty)";
-            
-            out<<"LinkedList( ";
+            if (first == nullptr)
+                return out << "LinkedList(empty)";
 
-            for(auto ptr=first;ptr;ptr=ptr->next)
-                out<<ptr->data<<" ";
+            out << "LinkedList( ";
 
-            return out<<")";
+            for (auto ptr = first; ptr; ptr = ptr->next)
+                out << ptr->data << " ";
+
+            return out << ")";
         }
 
-        LinkedList & operator<<(int value)
+        LinkedList &operator<<(int value)
         {
             Append(value);
             return *this;
@@ -169,36 +206,53 @@ namespace conceptarchitect::collections
 
         bool operator==(const LinkedList &rhs) const
         {
-            if(Size()!=rhs.Size())
+            if (Size() != rhs.Size())
                 return false;
-            if(&rhs==this)
+            if (&rhs == this)
                 return true;
 
-            for(auto l1=first, l2=rhs.first; l1!=nullptr; l1=l1->next,l2=l2->next)
-                if(l1->data!=l2->data)
+            for (auto l1 = first, l2 = rhs.first; l1 != nullptr; l1 = l1->next, l2 = l2->next)
+                if (l1->data != l2->data)
                     return false;
 
             return true;
         }
 
+        long sum() const
+        {
+            long result = 0;
+
+            for (auto n = first; n; n = n->next)
+                result += n->data;
+
+            return result;
+        }
+
+        LinkedListNodePointer begin()
+        {
+            return LinkedListNodePointer(first);
+        }
+
+        LinkedListNodePointer end()
+        {
+            return LinkedListNodePointer(nullptr);
+        }
     };
 
-    inline ostream & operator<<(ostream &out, const LinkedList &list)
+    inline ostream &operator<<(ostream &out, const LinkedList &list)
     {
-        if(list.Size()==0)
-            return out<<"LinkedList(empty)";
+        if (list.Size() == 0)
+            return out << "LinkedList(empty)";
 
-        out<<"LinkedList( ";
-        for(auto i=0;i<list.Size();i++)
-            out<<list[i]<<" ";
+        out << "LinkedList( ";
+        for (auto i = 0; i < list.Size(); i++)
+            out << list[i] << " ";
 
-        return out<<")";
+        return out << ")";
     }
 
-    inline ostream & operator<<(ostream &out, const LinkedList *list)
+    inline ostream &operator<<(ostream &out, const LinkedList *list)
     {
-        return out<<*list;
+        return out << *list;
     }
 }
-
-
