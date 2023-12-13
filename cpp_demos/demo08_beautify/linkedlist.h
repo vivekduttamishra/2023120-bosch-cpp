@@ -25,31 +25,48 @@ namespace conceptarchitect::collections
     class LinkedList
     {
         Node *first = nullptr;
+        Node *last=nullptr;
+        int _size=0;
+
+        Node * Locate(int index) const
+        {
+            if(Size()==0)
+                throw EmptyError("LinkedList is emtpy");
+
+            if(index<0 || index>=Size())
+                throw IndexError("Index out of range",index);
+
+            auto ptr=first;
+            for(auto i=0;i<index;i++)
+                ptr=ptr->next;
+
+            return ptr;
+        }
 
     public:
         LinkedList& Append(int value)
         {
-            Node *newNode = new Node(value);
+            Node *newNode = new Node(value,nullptr,last);
+
             if (first == nullptr)
             {
                 first = newNode;
             }
             else
             {
-                Node *ptr = first;
-                while (ptr->next)
-                    ptr = ptr->next;
-
-                ptr->next = newNode;
-                newNode->previous = ptr;
+                last->next = newNode;
+                
             }
+
+            last=newNode;
+            _size++;
             return *this;
         }
 
         
      
 
-        void Insert(int index, int value) 
+        LinkedList& Insert(int index, int value) 
         {
             auto ptr= Locate(index);
             Node *y= ptr->next;
@@ -63,7 +80,9 @@ namespace conceptarchitect::collections
                 first=newNode;
 
             y->previous=newNode;
+            _size++;
 
+            return *this;
 
         }
 
@@ -88,27 +107,10 @@ namespace conceptarchitect::collections
 
         int Size() const
         {
-            int c=0;
-            for(auto ptr=first; ptr!=nullptr; ptr=ptr->next)
-                c++;
-
-            return c;
+            return _size;
         }
 
-        Node * Locate(int index) const
-        {
-            if(Size()==0)
-                throw EmptyError("LinkedList is emtpy");
-
-            if(index<0 || index>=Size())
-                throw IndexError("Index out of range",index);
-
-            auto ptr=first;
-            for(auto i=0;i<index;i++)
-                ptr=ptr->next;
-
-            return ptr;
-        }
+        
 
        
 
@@ -130,7 +132,7 @@ namespace conceptarchitect::collections
             auto value=ptr->data;
             
             delete ptr;
-
+            _size--;
             return value;
         }
 
@@ -193,6 +195,10 @@ namespace conceptarchitect::collections
         return out<<")";
     }
 
+    inline ostream & operator<<(ostream &out, const LinkedList *list)
+    {
+        return out<<*list;
+    }
 }
 
 
