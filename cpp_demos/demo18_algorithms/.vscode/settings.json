@@ -9,6 +9,7 @@
         "type_traits": "cpp",
         "xstring": "cpp",
         "xutility": "cpp",
-        "chrono": "cpp"
+        "chrono": "cpp",
+        "filesystem": "cpp"
     }
 }

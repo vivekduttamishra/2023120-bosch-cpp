@@ -111,7 +111,18 @@ namespace conceptarchitect::collections
             return ptr;
         }
 
+        void AppendAll(){}
     public:
+
+        LinkedList()
+        {
+        }
+
+        LinkedList( initializer_list<T> values)
+        {
+            for(auto value : values)
+                AppendOne(value);
+        }
 
         LinkedList(const LinkedList<T> &rvalue)
         {
@@ -161,9 +172,7 @@ namespace conceptarchitect::collections
             return *this;
         }
 
-        LinkedList()
-        {
-        }
+        
 
         ~LinkedList()
         {
@@ -173,7 +182,7 @@ namespace conceptarchitect::collections
         LinkedList<T> &CopyAll(const LinkedList<T> &other)
         {
             for (auto ptr = other.first; ptr; ptr = ptr->next)
-                Append(ptr->data);
+                AppendOne(ptr->data);
 
             return *this;
         }
@@ -194,7 +203,35 @@ namespace conceptarchitect::collections
             return *this;
         }
 
-        LinkedList<T> &Append(T value)
+        LinkedList<T> & Append(initializer_list<T> values)
+        {
+            for(auto value : values)
+                AppendOne(value);
+
+            return *this;
+        }
+
+        template<typename ...Args>
+        void AddAll(Args...args)
+        {
+            ((AppendOne(args)),...); 
+        }
+
+        template<typename ...Args>
+        void AppendAll(T value, Args... args) //parameter pack
+        {
+            
+            AppendOne(value);
+
+            AppendAll( args...); // unpack parameter and call again.
+            
+        }
+
+
+
+        
+
+        LinkedList<T> &AppendOne(T value)
         {
             auto newNode = new Node<T>(value, nullptr, last);
 
@@ -287,7 +324,7 @@ namespace conceptarchitect::collections
 
         LinkedList<T> &operator<<(T value)
         {
-            Append(value);
+            AppendOne(value);
             return *this;
         }
 
