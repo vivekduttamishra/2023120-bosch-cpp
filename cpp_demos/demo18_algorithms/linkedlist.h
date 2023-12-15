@@ -7,6 +7,19 @@
 
 using namespace std;
 
+
+struct Pos
+{
+    int index=-1;
+    Pos(int index=-1):index(index){}
+};
+
+Pos pos(int index)
+{
+    Pos p(index);
+    return p;
+}
+
 namespace conceptarchitect::collections
 {
 
@@ -320,11 +333,42 @@ namespace conceptarchitect::collections
             return *result;
         }
 
-        
+        Pos pos;
+
+        LinkedList<T> & operator<<(Pos pos)
+        {
+            this->pos=pos;
+            return *this;
+        }
+
+        LinkedList<T> & operator>>(Pos pos)
+        {
+            this->pos=pos;
+            return *this;
+        }
 
         LinkedList<T> &operator<<(T value)
         {
-            AppendOne(value);
+            if(pos.index ==-1)
+                AppendOne(value);
+            else
+            {
+                Insert(pos.index, value);
+                pos.index=-1;
+            }
+
+            return *this;
+        }
+
+        LinkedList<T> & operator>>(T &output)
+        {
+            if(pos.index==-1)
+                output= Remove(0);
+            else
+            {
+                output= Remove(pos.index);
+                pos.index=-1;
+            }
             return *this;
         }
 
